@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "127143586910",
+    "project_id": "dsahealth-12dca",
+    "storage_bucket": "dsahealth-12dca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127143586910:android:b76acee4bfe0e3e7c458cf",
+        "android_client_info": {
+          "package_name": "com.drowsycoder.serenity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "127143586910-9v7hqvbv4o181prehpavklq49rbeh18g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.drowsycoder.serenity",
+            "certificate_hash": "e2ff0f51f4f77f2253652a8a6d9d5386889308c3"
+          }
+        },
+        {
+          "client_id": "127143586910-rq0njctlr8cvssu75ck0fjnu999pm084.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHn9R1eETWWEtveTBgBEe74cy9htIv9oM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "127143586910-petskek9g815pj7i8f2tvq6tdvp8lafo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
