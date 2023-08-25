@@ -3,9 +3,8 @@ import 'package:serenity/screens/health_features/menstrual_tracker/menstrual_tra
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:serenity/screens/mental_health/journal_screen.dart';
-// import 'package:serenity/screens/mental_health/meditation_screen.dart';
-// import 'package:serenity/screens/physical_health/widgets/menstrual_tracker.dart';
+import 'package:serenity/screens/journal/journal_screen.dart';
+import 'package:serenity/screens/meditation/meditation_screen.dart';
 
 class FeaturesScreen extends StatelessWidget {
   final User? user = FirebaseAuth.instance.currentUser;
@@ -116,12 +115,12 @@ class FeaturesScreen extends StatelessWidget {
                     color: Colors.white, // Set the trailing icon color
                   ),
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => MeditationScreen(),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MeditationScreen(),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -157,12 +156,12 @@ class FeaturesScreen extends StatelessWidget {
                     color: Colors.white, // Set the trailing icon color
                   ),
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => JournalScreen(),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => JournalScreen(),
+                      ),
+                    );
                   },
                 ),
               ),

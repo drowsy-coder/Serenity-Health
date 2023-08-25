@@ -47,6 +47,9 @@ dependencies:
   shared_preferences: ^2.2.0
   google_sign_in: ^6.1.4
   intl: ^0.18.1
+  quickalert: ^1.0.1
+  circular_countdown_timer: ^0.2.3
+  just_audio: ^0.9.34
 
 dev_dependencies:
   flutter_test:
