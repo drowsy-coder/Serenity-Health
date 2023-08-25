@@ -24,17 +24,6 @@ class FeaturesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Health Toolbox',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.amber[700], // Set the app bar color
-        iconTheme: const IconThemeData(
-          color: Colors.black, // Set the color of the back arrow
-        ),
-      ),
-
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -43,7 +32,7 @@ class FeaturesScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 16.0),
               Card(
-                color: Colors.blueAccent, // Set the card background color
+                color: Colors.blueAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.0),
                 ),
@@ -54,23 +43,23 @@ class FeaturesScreen extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Colors.white, // Set the title text color
+                      color: Colors.white,
                     ),
                   ),
                   subtitle: const Text(
                     'Set reminders for your medications',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white70, // Set the subtitle text color
+                      color: Colors.white70,
                     ),
                   ),
                   leading: const Icon(
                     Icons.medical_services,
-                    color: Colors.white, // Set the leading icon color
+                    color: Colors.white,
                   ),
                   trailing: const Icon(
                     Icons.arrow_forward_ios,
-                    color: Colors.white, // Set the trailing icon color
+                    color: Colors.white,
                   ),
                   onTap: () {
                     Navigator.push(
@@ -84,11 +73,10 @@ class FeaturesScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               Card(
-                color: Colors.purple, // Set the card background color
+                color: Colors.purple,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.0),
                 ),
-
                 elevation: 4,
                 child: ListTile(
                   title: const Text(
@@ -96,23 +84,23 @@ class FeaturesScreen extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Colors.white, // Set the title text color
+                      color: Colors.white,
                     ),
                   ),
                   subtitle: const Text(
                     'Meditate to relax your mind and body',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white70, // Set the subtitle text color
+                      color: Colors.white70,
                     ),
                   ),
                   leading: const Icon(
                     Icons.spa,
-                    color: Colors.white, // Set the leading icon color
+                    color: Colors.white,
                   ),
                   trailing: const Icon(
                     Icons.arrow_forward_ios,
-                    color: Colors.white, // Set the trailing icon color
+                    color: Colors.white,
                   ),
                   onTap: () {
                     Navigator.push(
@@ -126,7 +114,7 @@ class FeaturesScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               Card(
-                color: Colors.green, // Set the card background color
+                color: Colors.green,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.0),
                 ),
@@ -137,23 +125,23 @@ class FeaturesScreen extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Colors.white, // Set the title text color
+                      color: Colors.white,
                     ),
                   ),
                   subtitle: const Text(
                     'Journal your thoughts and feelings',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white70, // Set the subtitle text color
+                      color: Colors.white70,
                     ),
                   ),
                   leading: const Icon(
                     Icons.book,
-                    color: Colors.white, // Set the leading icon color
+                    color: Colors.white,
                   ),
                   trailing: const Icon(
                     Icons.arrow_forward_ios,
-                    color: Colors.white, // Set the trailing icon color
+                    color: Colors.white,
                   ),
                   onTap: () {
                     Navigator.push(
@@ -171,7 +159,7 @@ class FeaturesScreen extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data == true) {
                     return Card(
-                      color: Colors.deepOrange, // Set the card background color
+                      color: Colors.deepOrange,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16.0),
                       ),
@@ -182,24 +170,23 @@ class FeaturesScreen extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
-                            color: Colors.white, // Set the title text color
+                            color: Colors.white,
                           ),
                         ),
                         subtitle: const Text(
                           'Track your menstrual cycle',
                           style: TextStyle(
                             fontSize: 14,
-                            color:
-                                Colors.white70, // Set the subtitle text color
+                            color: Colors.white70,
                           ),
                         ),
                         leading: const Icon(
                           Icons.calendar_today,
-                          color: Colors.white, // Set the leading icon color
+                          color: Colors.white,
                         ),
                         trailing: const Icon(
                           Icons.arrow_forward_ios,
-                          color: Colors.white, // Set the trailing icon color
+                          color: Colors.white,
                         ),
                         onTap: () {
                           Navigator.push(
@@ -221,7 +208,7 @@ class FeaturesScreen extends StatelessWidget {
           ),
         ),
       ),
-      backgroundColor: Colors.grey[900], // Set the screen background color
+      backgroundColor: Colors.grey[900],
     );
   }
 }

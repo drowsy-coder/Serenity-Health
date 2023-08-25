@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dart_sentiment/dart_sentiment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class JournalScreen extends StatefulWidget {
   @override
@@ -12,18 +13,45 @@ class _JournalScreenState extends State<JournalScreen> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _textController = TextEditingController();
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   int negativeEntryCount = 0;
   DateTime lastNegativeEntryTime = DateTime.now();
 
+  String? _uid;
+
+  @override
+  void initState() {
+    super.initState();
+    _auth.authStateChanges().listen((user) {
+      if (user != null) {
+        setState(() {
+          _uid = user.uid;
+        });
+      } else {
+        setState(() {
+          _uid = null;
+        });
+      }
+    });
+  }
+
   void analyzeSentiment(String title, String text) async {
+    if (_uid == null) {
+      return;
+    }
+
     Map<String, dynamic> analysis = sentiment.analysis(text);
     double score = analysis['score'].toDouble();
 
     String sentimentText = interpretScore(score);
     String emoji = getEmojiForSentiment(score);
 
-    await _firestore.collection('journal_entries').add({
+    await _firestore
+        .collection('users')
+        .doc(_uid)
+        .collection('journal_entries')
+        .add({
       'title': title,
       'text': text,
       'score': score,
@@ -177,10 +205,14 @@ class _JournalScreenState extends State<JournalScreen> {
             ),
             SizedBox(height: 8),
             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: _firestore
-                  .collection('journal_entries')
-                  .orderBy('timestamp', descending: true)
-                  .snapshots(),
+              stream: _uid != null
+                  ? _firestore
+                      .collection('users')
+                      .doc(_uid)
+                      .collection('journal_entries')
+                      .orderBy('timestamp', descending: true)
+                      .snapshots()
+                  : null,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
