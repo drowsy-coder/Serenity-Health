@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:dart_sentiment/dart_sentiment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class JournalScreen extends StatefulWidget {
   @override
@@ -9,283 +8,285 @@ class JournalScreen extends StatefulWidget {
 }
 
 class _JournalScreenState extends State<JournalScreen> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  int _selectedMoodIndex = -1;
+  final Sentiment sentiment = Sentiment();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _textController = TextEditingController();
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  @override
-  Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final uid = user?.uid;
+  int negativeEntryCount = 0;
+  DateTime lastNegativeEntryTime = DateTime.now();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Journal'),
-        backgroundColor: Colors.green,
-      ),
-      body: Container(
-        color: Colors.grey[900],
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                elevation: 4,
-                color: Colors.grey[800],
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Text(
-                        'New Entry',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _titleController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(
-                          labelText: 'Title',
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _descriptionController,
-                        style: const TextStyle(color: Colors.white),
-                        maxLines: 4,
-                        decoration: const InputDecoration(
-                          labelText: 'Description',
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'How was your mood today?',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildMoodButton(0, '😓'),
-                          _buildMoodButton(1, '😊'),
-                          _buildMoodButton(2, '😄'),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          _saveEntry(uid);
-                          _clearFields();
-                        },
-                        child: const Text('Save Entry'),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.pink,
-                          onPrimary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          textStyle: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildEntryList(uid),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  void analyzeSentiment(String title, String text) async {
+    Map<String, dynamic> analysis = sentiment.analysis(text);
+    double score = analysis['score'].toDouble();
 
-  Widget _buildMoodButton(int index, String emoji) {
-    final isSelected = index == _selectedMoodIndex;
-    final color = isSelected ? Colors.blue : Colors.grey;
+    String sentimentText = interpretScore(score);
+    String emoji = getEmojiForSentiment(score);
 
-    return IconButton(
-      onPressed: () {
-        setState(() {
-          _selectedMoodIndex = index;
-        });
-      },
-      icon: Text(
-        emoji,
-        style: const TextStyle(fontSize: 24),
-      ),
-      color: color,
-    );
-  }
+    await _firestore.collection('journal_entries').add({
+      'title': title,
+      'text': text,
+      'score': score,
+      'sentiment': sentimentText,
+      'emoji': emoji,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
 
-  Future<void> _saveEntry(String? uid) async {
-    final title = _titleController.text;
-    final description = _descriptionController.text;
-    final mood = _selectedMoodIndex;
-
-    if (title.isEmpty || description.isEmpty || mood == -1) {
-      return;
+    if (score < -0.2) {
+      DateTime currentTime = DateTime.now();
+      if (currentTime.difference(lastNegativeEntryTime).inDays <= 7) {
+        negativeEntryCount++;
+        if (negativeEntryCount >= 3) {
+          showHelpAlert();
+        }
+      } else {
+        negativeEntryCount = 1;
+      }
+      lastNegativeEntryTime = currentTime;
     }
 
-    final entry = {
-      'uid': uid,
-      'title': title,
-      'description': description,
-      'mood': mood,
-      'timestamp': DateTime.now(),
-    };
-
-    final entryRef = FirebaseFirestore.instance.collection('entries');
-    await entryRef.add(entry);
-  }
-
-  void _clearFields() {
     _titleController.clear();
-    _descriptionController.clear();
-    setState(() {
-      _selectedMoodIndex = -1;
-    });
+    _textController.clear();
   }
 
-  Widget _buildEntryList(String? uid) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('entries')
-          .where('uid', isEqualTo: uid)
-          .orderBy('timestamp', descending: true)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final entries = snapshot.data?.docs ?? [];
-
-        if (entries.isEmpty) {
-          return const Center(child: Text('No entries found.'));
-        }
-
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: entries.length,
-          itemBuilder: (context, index) {
-            final entry = entries[index].data() as Map<String, dynamic>;
-            final title = entry['title'] ?? '';
-            final description = entry['description'] ?? '';
-            final mood = entry['mood'];
-            final timestamp = entry['timestamp'] as Timestamp;
-
-            final dateTime = timestamp.toDate();
-            final formattedDate =
-                '${dateTime.day}-${dateTime.month}-${dateTime.year}';
-
-            return Card(
-              elevation: 2,
-              color: Colors.grey[800],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ListTile(
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                title: Text(
-                  '$title : $formattedDate',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  description,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
-                ),
-                trailing: Container(
-                  decoration: BoxDecoration(
-                    // color: Colors.black,
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: _buildMoodEmoji(mood),
-                ),
-              ),
-            );
-          },
+  void showHelpAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Seek Help"),
+          content: Text(
+              "It seems like you've had very negative entries three times in a week. Consider seeking help at https://www.betterhelp.com"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Dismiss"),
+            ),
+          ],
         );
       },
     );
   }
 
-  Widget _buildMoodEmoji(int mood) {
-    String emoji;
-    String text;
-
-    switch (mood) {
-      case 0:
-        emoji = '😓';
-        text = 'Bad';
-        break;
-      case 1:
-        emoji = '😊';
-        text = 'Neutral';
-        break;
-      case 2:
-        emoji = '😄';
-        text = 'Good';
-        break;
-      default:
-        emoji = '😐';
-        text = 'Unknown';
+  String interpretScore(double score) {
+    if (score > 0.2) {
+      return "Very Positive";
+    } else if (score > 0) {
+      return "Positive";
+    } else if (score < -0.2) {
+      return "Very Negative";
+    } else if (score < 0) {
+      return "Negative";
+    } else {
+      return "Neutral";
     }
+  }
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          emoji,
-          style: const TextStyle(fontSize: 24),
+  String getEmojiForSentiment(double score) {
+    if (score > 0.2) {
+      return '😄';
+    } else if (score > 0) {
+      return '🙂';
+    } else if (score < -0.2) {
+      return '😔';
+    } else if (score < 0) {
+      return '😞';
+    } else {
+      return '😐';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Journal Entry'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              controller: _titleController,
+              style: TextStyle(fontSize: 18),
+              decoration: InputDecoration(
+                labelText: 'Title',
+                labelStyle: TextStyle(color: Colors.blue),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
+            TextFormField(
+              controller: _textController,
+              style: TextStyle(fontSize: 16),
+              maxLines: 4,
+              decoration: InputDecoration(
+                labelText: 'Write your journal entry',
+                labelStyle: TextStyle(color: Colors.yellow),
+                alignLabelWithHint: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.yellow),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  analyzeSentiment(_titleController.text, _textController.text);
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: Text(
+                  'Add Journal Entry',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+            SizedBox(height: 24),
+            Row(
+              children: [
+                Icon(
+                  Icons.book,
+                  size: 24,
+                  color: Colors.red,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'Journal Entries:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: _firestore
+                  .collection('journal_entries')
+                  .orderBy('timestamp', descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return Center(child: Text('No journal entries available.'));
+                }
+
+                List<QueryDocumentSnapshot<Map<String, dynamic>>> entries =
+                    snapshot.data!.docs;
+
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: entries.length,
+                    itemBuilder: (context, index) {
+                      var entry = entries[index].data();
+                      String text = entry['text'] ?? '';
+                      String title = entry['title'] ?? '';
+                      String sentimentText = entry['sentiment'] ?? '';
+                      String emoji = entry['emoji'] ?? '';
+
+                      return Card(
+                        elevation: 10,
+                        margin: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24.0),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF5C6BC0), Color(0xFF3F51B5)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(24.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.4),
+                                blurRadius: 10,
+                                offset: Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  emoji,
+                                  style: TextStyle(
+                                    fontSize: 36,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      title,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      text,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      sentimentText,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
         ),
-        const SizedBox(width: 4),
-        Text(text, style: const TextStyle(color: Colors.grey)),
-      ],
+      ),
     );
   }
 }

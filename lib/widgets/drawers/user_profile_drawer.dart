@@ -1,3 +1,5 @@
+import 'package:serenity/screens/Sakhi/chat_screen.dart';
+import 'package:serenity/screens/SoS/sos_location.dart';
 import 'package:serenity/widgets/buttons/sign_out_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:delayed_display/delayed_display.dart';
@@ -80,11 +82,10 @@ class AppDrawer extends StatelessWidget {
                           color: Colors.grey,
                         ),
                         onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => SoSPage()),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SoSPage()),
+                          );
                         },
                         tileColor:
                             Theme.of(context).brightness == Brightness.dark
@@ -112,11 +113,11 @@ class AppDrawer extends StatelessWidget {
                           color: Colors.grey,
                         ),
                         onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => const ChatScreen()),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ChatScreen()),
+                          );
                         },
                         tileColor:
                             Theme.of(context).brightness == Brightness.dark

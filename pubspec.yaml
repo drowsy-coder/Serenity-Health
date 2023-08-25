@@ -50,6 +50,10 @@ dependencies:
   quickalert: ^1.0.1
   circular_countdown_timer: ^0.2.3
   just_audio: ^0.9.34
+  dart_sentiment: ^0.0.9
+  animate_do: ^3.0.2
+  flutter_tts: ^3.7.0
+  speech_to_text: ^6.3.0
 
 dev_dependencies:
   flutter_test:
