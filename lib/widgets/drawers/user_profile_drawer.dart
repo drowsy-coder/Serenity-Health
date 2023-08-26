@@ -1,4 +1,5 @@
 import 'package:delayed_display/delayed_display.dart';
+import 'package:serenity/map_screen.dart';
 import 'package:serenity/screens/Sakhi/chat_screen.dart';
 import 'package:serenity/screens/SoS/sos_location.dart';
 import 'package:serenity/widgets/buttons/sign_out_button.dart';
@@ -87,6 +88,13 @@ class AppDrawer extends StatelessWidget {
                       'Swasthya Sakhi',
                       Colors.green,
                       const ChatScreen(),
+                    ),
+                    buildAnimatedTile(
+                      context,
+                      Icons.local_hospital,
+                      'Nearby Hospitals',
+                      Colors.red,
+                      const MapScreen(),
                     ),
                     const SizedBox(height: 16),
                     buildSignOutButton(),

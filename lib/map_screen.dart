@@ -29,20 +29,22 @@ class _MapScreenState extends State<MapScreen> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        initialCameraPosition: _initialCameraPosition,
-        markers: Set<Marker>.of(_markers),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        myLocationEnabled: true,
+      appBar: AppBar(
+        title: Text("Nearby Hospitals"),
+        centerTitle: true,
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height * 0.8,
+        child: GoogleMap(
+          initialCameraPosition: _initialCameraPosition,
+          markers: Set<Marker>.of(_markers),
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          myLocationEnabled: true,
+        ),
       ),
     );
   }
