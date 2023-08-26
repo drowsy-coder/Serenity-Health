@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class JournalScreen extends StatefulWidget {
+  const JournalScreen({super.key});
+
   @override
   _JournalScreenState createState() => _JournalScreenState();
 }
@@ -82,15 +84,15 @@ class _JournalScreenState extends State<JournalScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Seek Help"),
-          content: Text(
+          title: const Text("Seek Help"),
+          content: const Text(
               "It seems like you've had very negative entries three times in a week. Consider seeking help at https://www.betterhelp.com"),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Dismiss"),
+              child: const Text("Dismiss"),
             ),
           ],
         );
@@ -130,7 +132,8 @@ class _JournalScreenState extends State<JournalScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Journal Entry'),
+        title: const Text('Journal Entry'),
+        backgroundColor: Colors.green,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -139,57 +142,57 @@ class _JournalScreenState extends State<JournalScreen> {
           children: [
             TextFormField(
               controller: _titleController,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
               decoration: InputDecoration(
                 labelText: 'Title',
-                labelStyle: TextStyle(color: Colors.blue),
+                labelStyle: const TextStyle(color: Colors.blue),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
+                  borderSide: const BorderSide(color: Colors.blue),
                   borderRadius: BorderRadius.circular(20.0),
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _textController,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
               maxLines: 4,
               decoration: InputDecoration(
                 labelText: 'Write your journal entry',
-                labelStyle: TextStyle(color: Colors.yellow),
+                labelStyle: const TextStyle(color: Colors.yellow),
                 alignLabelWithHint: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.yellow),
+                  borderSide: const BorderSide(color: Colors.yellow),
                   borderRadius: BorderRadius.circular(20.0),
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
                 onPressed: () {
                   analyzeSentiment(_titleController.text, _textController.text);
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
+                  primary: Colors.lightBlueAccent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Add Journal Entry',
                   style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
-            SizedBox(height: 24),
-            Row(
+            const SizedBox(height: 24),
+            const Row(
               children: [
                 Icon(
                   Icons.book,
@@ -203,7 +206,7 @@ class _JournalScreenState extends State<JournalScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: _uid != null
                   ? _firestore
@@ -215,10 +218,11 @@ class _JournalScreenState extends State<JournalScreen> {
                   : null,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (!snapshot.hasData || snapshot.data == null) {
-                  return Center(child: Text('No journal entries available.'));
+                  return const Center(
+                      child: Text('No journal entries available.'));
                 }
 
                 List<QueryDocumentSnapshot<Map<String, dynamic>>> entries =
@@ -236,13 +240,13 @@ class _JournalScreenState extends State<JournalScreen> {
 
                       return Card(
                         elevation: 10,
-                        margin: EdgeInsets.symmetric(vertical: 16),
+                        margin: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24.0),
                         ),
                         child: Container(
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                               colors: [Color(0xFF5C6BC0), Color(0xFF3F51B5)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -252,17 +256,17 @@ class _JournalScreenState extends State<JournalScreen> {
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.4),
                                 blurRadius: 10,
-                                offset: Offset(0, 6),
+                                offset: const Offset(0, 6),
                               ),
                             ],
                           ),
                           child: Row(
                             children: [
                               Container(
-                                padding: EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(20),
                                 child: Text(
                                   emoji,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 36,
                                     color: Colors.white,
                                   ),
@@ -275,16 +279,16 @@ class _JournalScreenState extends State<JournalScreen> {
                                   children: [
                                     Text(
                                       title,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                         fontSize: 20,
                                       ),
                                     ),
-                                    SizedBox(height: 8),
+                                    const SizedBox(height: 8),
                                     Text(
                                       text,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
                                       ),
@@ -293,13 +297,13 @@ class _JournalScreenState extends State<JournalScreen> {
                                 ),
                               ),
                               Container(
-                                padding: EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(20),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
                                       sentimentText,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
                                       ),

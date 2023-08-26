@@ -1,3 +1,4 @@
+import 'package:serenity/map_screen.dart';
 import 'package:serenity/screens/health_features/medicine_reminder/medication_reminder.dart';
 import 'package:serenity/screens/health_features/menstrual_tracker/menstrual_tracker.dart';
 import 'package:flutter/material.dart';
@@ -192,8 +193,7 @@ class FeaturesScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const MenstrualCycleTrackerScreen(),
+                              builder: (context) => const MapScreen(),
                             ),
                           );
                         },

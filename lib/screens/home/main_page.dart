@@ -25,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
       if (page == 0) {
         _title = 'Home';
       } else if (page == 1) {
-        _title = 'Toolbox';
+        _title = 'Health Tools';
       }
     });
   }
