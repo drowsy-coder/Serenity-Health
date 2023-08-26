@@ -23,76 +23,75 @@ class MyCarouselSlider extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   content: SingleChildScrollView(
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
+                      width: MediaQuery.of(context).size.width * 0.8,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(12.0),
+                        borderRadius: BorderRadius.circular(20.0),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            blurRadius: 6.0,
-                            offset: const Offset(0, 3),
+                            color: Colors.grey.withOpacity(0.5),
+                            blurRadius: 12.0,
+                            offset: const Offset(0, 6),
                           ),
                         ],
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.asset(
-                              item.imageAssetPath,
-                              height: 200.0,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
+                          Container(
+                            height: 250.0,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(20.0)),
+                              image: DecorationImage(
+                                image: AssetImage(item.imageAssetPath),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 16.0),
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0),
+                                horizontal: 24.0, vertical: 20.0),
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   item.title,
-                                  style: TextStyle(
-                                    fontSize: 20.0,
+                                  style: const TextStyle(
+                                    fontSize: 28.0,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.amber[900],
+                                    color: Colors.indigo,
                                   ),
                                 ),
-                                const SizedBox(height: 8.0),
+                                const SizedBox(height: 10.0),
                                 Text(
                                   item.description,
                                   style: const TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.black,
+                                    fontSize: 18.0,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const SizedBox(height: 20.0),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    launch(item.redirectLink);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.purple,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 14.0,
+                                      horizontal: 28.0,
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Learn More',
+                                    style: TextStyle(fontSize: 18.0),
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                          const SizedBox(height: 16.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              launch(item.redirectLink);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.purple,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(24.0),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 12.0,
-                                horizontal: 24.0,
-                              ),
-                            ),
-                            child: const Text(
-                              'Learn More',
-                              style: TextStyle(fontSize: 16.0),
                             ),
                           ),
                         ],
@@ -105,66 +104,64 @@ class MyCarouselSlider extends StatelessWidget {
           },
           child: Container(
             width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.symmetric(horizontal: 16.0),
+            margin: const EdgeInsets.symmetric(horizontal: 10.0),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(20.0),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
-                  blurRadius: 6.0,
-                  offset: const Offset(0, 3),
+                  color: Colors.grey.withOpacity(0.5),
+                  blurRadius: 10.0,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: SingleChildScrollView(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey[300]!,
-                    width: 1.0,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey[300]!,
+                  width: 1.5,
+                ),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: Image.asset(
+                      item.imageAssetPath,
+                      height: 120.0,
+                      width: 120.0,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(
-                        item.imageAssetPath,
-                        height: 100.0,
-                        width: 100.0,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(width: 16.0),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.title,
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.amber[900],
-                            ),
+                  const SizedBox(width: 20.0),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.title,
+                          style: const TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepPurple,
                           ),
-                          const SizedBox(height: 8.0),
-                          Text(
-                            item.description,
-                            style: const TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.black,
-                            ),
+                        ),
+                        const SizedBox(height: 10.0),
+                        Text(
+                          item.description,
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.black87,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
