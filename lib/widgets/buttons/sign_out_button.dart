@@ -44,8 +44,8 @@ class _SignOutButtonState extends State<SignOutButton> {
         );
       },
       decoration: const NeoPopTiltedButtonDecoration(
-        color: Color.fromRGBO(255, 235, 52, 1),
-        plunkColor: Color.fromRGBO(255, 235, 52, 1),
+        color: Color.fromRGBO(255, 52, 52, 1),
+        plunkColor: Color.fromRGBO(228, 62, 62, 1),
         shadowColor: Color.fromRGBO(36, 36, 36, 1),
         showShimmer: true,
       ),
