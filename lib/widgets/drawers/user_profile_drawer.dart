@@ -1,8 +1,8 @@
+import 'package:delayed_display/delayed_display.dart';
 import 'package:serenity/screens/Sakhi/chat_screen.dart';
 import 'package:serenity/screens/SoS/sos_location.dart';
 import 'package:serenity/widgets/buttons/sign_out_button.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:delayed_display/delayed_display.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,123 +12,84 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       child: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountName: AnimatedTextKit(
-                animatedTexts: [
-                  TypewriterAnimatedText(
-                    FirebaseAuth.instance.currentUser?.displayName ??
-                        'Username',
-                    textStyle: const TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              decoration: const BoxDecoration(
+                color: Color(0xFF65C7C8),
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      FirebaseAuth.instance.currentUser?.photoURL ?? '',
                     ),
-                    speed: const Duration(milliseconds: 50),
+                    radius: 28,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AnimatedTextKit(
+                          animatedTexts: [
+                            TypewriterAnimatedText(
+                              FirebaseAuth.instance.currentUser?.displayName ??
+                                  'Username',
+                              textStyle: const TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                              speed: const Duration(milliseconds: 50),
+                            ),
+                          ],
+                          totalRepeatCount: 1,
+                          pause: const Duration(milliseconds: 100),
+                          displayFullTextOnTap: true,
+                          stopPauseOnTap: true,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          FirebaseAuth.instance.currentUser?.email ?? 'Email',
+                          style: const TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
-                totalRepeatCount: 1,
-                pause: const Duration(milliseconds: 100),
-                displayFullTextOnTap: true,
-                stopPauseOnTap: true,
-              ),
-              accountEmail: Text(
-                FirebaseAuth.instance.currentUser?.email ?? 'Email',
-                style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                ),
-              ),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  FirebaseAuth.instance.currentUser?.photoURL ?? '',
-                ),
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.grey[900]
-                    : const Color(0xFFAEC6CF),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.grey[980],
+                color: Colors.grey[900],
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: <Widget>[
-                    const SizedBox(height: 8),
-                    DelayedDisplay(
-                      delay: const Duration(milliseconds: 200),
-                      child: ListTile(
-                        leading: const Icon(
-                          Icons.warning,
-                          color: Colors.amber,
-                        ),
-                        title: const Text(
-                          'SoS',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SoSPage()),
-                          );
-                        },
-                        tileColor:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? Colors.grey[800]
-                                : Colors.white,
-                      ),
+                    const SizedBox(height: 16),
+                    buildAnimatedTile(
+                      context,
+                      Icons.warning,
+                      'SoS',
+                      Colors.amber,
+                      SoSPage(),
                     ),
-                    DelayedDisplay(
-                      delay: const Duration(milliseconds: 300),
-                      child: ListTile(
-                        leading: const Icon(
-                          Icons.chat,
-                          color: Colors.green,
-                        ),
-                        title: const Text(
-                          'Swasthya Sakhi',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ChatScreen()),
-                          );
-                        },
-                        tileColor:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? Colors.grey[800]
-                                : Colors.white,
-                      ),
+                    buildAnimatedTile(
+                      context,
+                      Icons.chat,
+                      'Swasthya Sakhi',
+                      Colors.green,
+                      const ChatScreen(),
                     ),
-                    const SizedBox(
-                      width: 50,
-                    ),
-                    const SignOutButton(),
+                    const SizedBox(height: 16),
+                    buildSignOutButton(),
                   ],
                 ),
               ),
@@ -136,6 +97,45 @@ class AppDrawer extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildAnimatedTile(BuildContext context, IconData icon, String title,
+      Color iconColor, Widget page) {
+    return DelayedDisplay(
+      delay: const Duration(milliseconds: 200),
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: iconColor,
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          color: Colors.grey,
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => page),
+          );
+        },
+        tileColor: Colors.white,
+      ),
+    );
+  }
+
+  Widget buildSignOutButton() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      child: SignOutButton(),
     );
   }
 }

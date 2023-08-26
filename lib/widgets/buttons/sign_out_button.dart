@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import flutter package for HapticFeedback
+import 'package:neopop/neopop.dart'; // Import NeoPop library
 import 'package:quickalert/quickalert.dart';
 import 'package:serenity/screens/login/login_method.dart';
 
@@ -14,8 +16,12 @@ class _SignOutButtonState extends State<SignOutButton> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
+    return NeoPopTiltedButton(
+      isFloating: true,
+      onTapUp: () {
+        // Add haptic feedback on tap
+        HapticFeedback.mediumImpact();
+
         QuickAlert.show(
           context: context,
           type: QuickAlertType.confirm,
@@ -37,7 +43,25 @@ class _SignOutButtonState extends State<SignOutButton> {
           },
         );
       },
-      child: const Text('Log Out'),
+      decoration: const NeoPopTiltedButtonDecoration(
+        color: Color.fromRGBO(255, 235, 52, 1),
+        plunkColor: Color.fromRGBO(255, 235, 52, 1),
+        shadowColor: Color.fromRGBO(36, 36, 36, 1),
+        showShimmer: true,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 20.0, vertical: 10.0), // Adjust padding for size
+        child: Center(
+          child: Text(
+            'Log Out',
+            style: TextStyle(
+              color: Colors.black, // Adjust text color
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
