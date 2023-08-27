@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,16 +16,38 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller = Completer();
 
-  Uint8List? markerIcon;
-  late String _darkMapStyle; 
+  late String _darkMapStyle;
 
   static const CameraPosition _initialCameraPosition = CameraPosition(
     target: LatLng(12.840738491239273, 80.15339126033456),
     zoom: 14,
   );
 
-  List<String> images = [
-    'assets/images/3448436.png',
+  List<String> names = [
+    "VIT Health Centre",
+    "VIT Health ",
+    "VIT  Centre",
+    "VIT ",
+    "V",
+    "Chetti",
+  ];
+
+  List<String> descriptions = [
+    "Description for Health Centre",
+    "Description for VIT Health",
+    "Description for VIT Centre",
+    "Description for VIT",
+    "Description for V",
+    "Description for Chetti",
+  ];
+
+  List<String> infoImages = [
+    'assets/images/lentils.png',
+    'assets/images/mental.png',
+    'assets/images/ncw.png',
+    'assets/images/sfi.png',
+    'assets/images/sleep.png',
+    'assets/images/logo.png',
   ];
 
   final List<Marker> _markers = <Marker>[];
@@ -59,17 +83,27 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void loadData() async {
-    markerIcon = await getBytesFromAssets(images[0], 150);
-
     for (int i = 0; i < _latLang.length; i++) {
+      Uint8List? markerIcon =
+          await getBytesFromAssets('assets/images/3448436.png', 150);
+
       _markers.add(
         Marker(
           markerId: MarkerId(i.toString()),
           position: _latLang[i],
-          infoWindow: InfoWindow(
-            title: "Hospital ${i + 1}",
-          ),
           icon: BitmapDescriptor.fromBytes(markerIcon!),
+          onTap: () {
+            showDialog<void>(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomInfoWindow(
+                  title: names[i],
+                  description: descriptions[i],
+                  image: infoImages[i],
+                );
+              },
+            );
+          },
         ),
       );
     }
@@ -93,6 +127,69 @@ class _MapScreenState extends State<MapScreen> {
           },
           myLocationEnabled: true,
         ),
+      ),
+    );
+  }
+}
+
+class CustomInfoWindow extends StatelessWidget {
+  final String title;
+  final String description;
+  final String image;
+
+  const CustomInfoWindow({
+    required this.title,
+    required this.description,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              image: DecorationImage(
+                image: AssetImage(image),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(description),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(16)),
+              ),
+              primary: Colors.blue,
+            ),
+            child: Text('Close'),
+          ),
+        ],
       ),
     );
   }
