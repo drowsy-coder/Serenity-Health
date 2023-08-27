@@ -1,11 +1,54 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class SoSPage extends StatelessWidget {
+class SoSPage extends StatefulWidget {
   const SoSPage({Key? key}) : super(key: key);
+
+  @override
+  _SoSPageState createState() => _SoSPageState();
+}
+
+class _SoSPageState extends State<SoSPage> {
+  int shakeCount = 0;
+  StreamSubscription<UserAccelerometerEvent>? _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = userAccelerometerEvents.listen((event) {
+      if (event.x.abs() > 12 || event.y.abs() > 12 || event.z.abs() > 12) {
+        shakeCount++;
+        if (shakeCount >= 3) {
+          sendLocationSms();
+          shakeCount = 0;
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  Future<void> sendLocationSms() async {
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    String message =
+        'I am in an Emergency at: https://www.google.com/maps/search/?api=1&query=${position.latitude},${position.longitude}&zoom=15&ll=${position.latitude},${position.longitude}&markers=color:blue%7Clabel:S%7C${position.latitude},${position.longitude}';
+    String encodedMessage = Uri.encodeComponent(message);
+    String url = 'sms:?body=$encodedMessage';
+    await launch(url);
+  }
 
   @override
   Widget build(BuildContext context) {
