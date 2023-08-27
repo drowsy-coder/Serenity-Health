@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Pallete {
   static const blackColor = Color.fromRGBO(1, 1, 1, 1); // primary color

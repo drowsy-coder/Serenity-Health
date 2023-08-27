@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +15,7 @@ class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller = Completer();
 
   Uint8List? markerIcon;
-  late String _darkMapStyle; // Declare the _darkMapStyle variable
+  late String _darkMapStyle; 
 
   static const CameraPosition _initialCameraPosition = CameraPosition(
     target: LatLng(12.840738491239273, 80.15339126033456),

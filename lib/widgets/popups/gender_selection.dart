@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class GenderSelectionDialouge extends StatelessWidget {
+  const GenderSelectionDialouge({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

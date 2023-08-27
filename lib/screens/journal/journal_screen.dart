@@ -12,10 +12,10 @@ class JournalScreen extends StatefulWidget {
 
 class _JournalScreenState extends State<JournalScreen> {
   final Sentiment sentiment = Sentiment();
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _textController = TextEditingController();
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   int negativeEntryCount = 0;
   DateTime lastNegativeEntryTime = DateTime.now();
@@ -180,7 +180,7 @@ class _JournalScreenState extends State<JournalScreen> {
                   analyzeSentiment(_titleController.text, _textController.text);
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.lightBlueAccent,
+                  backgroundColor: Colors.lightBlueAccent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),

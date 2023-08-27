@@ -65,7 +65,7 @@ class FeaturesScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MedicationRemindersScreen(),
+                        builder: (context) => const MedicationRemindersScreen(),
                       ),
                     );
                   },
@@ -106,7 +106,7 @@ class FeaturesScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MeditationScreen(),
+                        builder: (context) => const MeditationScreen(),
                       ),
                     );
                   },
@@ -147,7 +147,7 @@ class FeaturesScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => JournalScreen(),
+                        builder: (context) => const JournalScreen(),
                       ),
                     );
                   },

@@ -3,12 +3,10 @@ import 'package:serenity/models/home_carousel_item.dart';
 import 'package:serenity/screens/home/card_screen.dart';
 import 'package:serenity/screens/home/slider_config.dart';
 import 'package:serenity/widgets/popups/gender_selection.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   final bool justLoggedIn;
@@ -93,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                   }
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   final documents = snapshot.data!.docs;

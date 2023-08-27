@@ -80,10 +80,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   (documents[index].get('periodEndDate') as Timestamp).toDate();
               String cycleLength = documents[index].get('cycleLength');
               String periodLength = documents[index].get('periodLength');
-              bool periodOn = documents[index].get('periodOn');
-              DateTime nextPeriodDate =
-                  (documents[index].get('nextPeriodDate') as Timestamp)
-                      .toDate();
 
               return Padding(
                 padding:

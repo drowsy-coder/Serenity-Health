@@ -48,7 +48,7 @@ class LoginMethods {
           content: Text('Failed to sign in with Google.'),
         ),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -87,7 +87,7 @@ class LoginMethods {
           content: Text('Failed to sign out.'),
         ),
       );
-      throw e;
+      rethrow;
     }
   }
 }

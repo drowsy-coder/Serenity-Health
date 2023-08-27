@@ -1,5 +1,4 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 
@@ -7,6 +6,8 @@ const Icon kPlayClockButton = Icon(Icons.play_arrow_sharp);
 const Icon kPauseClockButton = Icon(Icons.pause_sharp);
 
 class MeditationScreen extends StatefulWidget {
+  const MeditationScreen({super.key});
+
   @override
   _MeditationScreenState createState() => _MeditationScreenState();
 }
@@ -39,10 +40,6 @@ class _MeditationScreenState extends State<MeditationScreen> {
   void switchClockActionButton() async {
     if (_clockButton == kPlayClockButton) {
       _clockButton = kPauseClockButton;
-
-      final player = AudioPlayer();
-      // await player.setFilePath("t.mp3");
-      // player.play();
       if (!_isClockStarted) {
         // Processed on init
         _isClockStarted = true;

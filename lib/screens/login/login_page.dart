@@ -18,7 +18,7 @@ class CarouselItem {
 class LoginPage extends StatelessWidget {
   final LoginMethods loginMethods = LoginMethods();
 
-  LoginPage({Key? key});
+  LoginPage({super.key, Key? key1});
 
   @override
   Widget build(BuildContext context) {

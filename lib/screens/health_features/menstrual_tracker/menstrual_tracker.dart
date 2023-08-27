@@ -64,16 +64,9 @@ class _MenstrualCycleTrackerScreenState
         _cycleController.text.isNotEmpty &&
         _periodController.text.isNotEmpty) {
       final int cycleLength = int.parse(_cycleController.text);
-      final int periodLength = int.parse(_periodController.text);
       final Duration cycleDuration = Duration(days: cycleLength);
-      final Duration periodDuration = Duration(days: periodLength);
       final DateTime periodStartDate = _selectedDate!;
-      final DateTime periodEndDate =
-          periodStartDate.add(periodDuration).subtract(const Duration(days: 1));
       final DateTime nextPeriodStartDate = periodStartDate.add(cycleDuration);
-      final DateTime nextPeriodEndDate = nextPeriodStartDate
-          .add(periodDuration)
-          .subtract(const Duration(days: 1));
       setState(() {
         _nextPeriodDate = nextPeriodStartDate;
       });

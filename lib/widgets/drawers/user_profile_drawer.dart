@@ -8,6 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {
+  const AppDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -80,7 +82,7 @@ class AppDrawer extends StatelessWidget {
                       Icons.warning,
                       'SoS',
                       Colors.amber,
-                      SoSPage(),
+                      const SoSPage(),
                     ),
                     buildAnimatedTile(
                       context,
@@ -143,7 +145,7 @@ class AppDrawer extends StatelessWidget {
   Widget buildSignOutButton() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: SignOutButton(),
+      child: const SignOutButton(),
     );
   }
 }

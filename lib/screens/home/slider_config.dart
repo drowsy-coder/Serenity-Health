@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 class MyCarouselSlider extends StatelessWidget {
   final List<CarouselItem> carouselItems;
 
-  MyCarouselSlider({required this.carouselItems});
+  const MyCarouselSlider({super.key, required this.carouselItems});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class MyCarouselSlider extends StatelessWidget {
                                     launch(item.redirectLink);
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: Colors.purple,
+                                    backgroundColor: Colors.purple,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30.0),
                                     ),

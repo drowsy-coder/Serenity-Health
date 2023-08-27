@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MedicationRemindersScreen extends StatefulWidget {
+  const MedicationRemindersScreen({super.key});
+
   @override
   _MedicationRemindersScreenState createState() =>
       _MedicationRemindersScreenState();
@@ -105,142 +107,140 @@ class _MedicationRemindersScreenState extends State<MedicationRemindersScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: [
-                Card(
-                  color: Colors.grey[900], // Set a dark background color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(0.0), // Remove the padding
-                    child: TextField(
-                      controller: medicationNameController,
-                      style: const TextStyle(
-                        color: Colors.white,
+          child: Column(
+            children: [
+              Card(
+                color: Colors.grey[900], // Set a dark background color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(0.0), // Remove the padding
+                  child: TextField(
+                    controller: medicationNameController,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ), // Set the text color and size
+                    decoration: InputDecoration(
+                      labelText: 'Medication Name',
+                      labelStyle: TextStyle(
+                        color: Colors.grey[400], // Set the label text color
                         fontSize: 16.0,
-                      ), // Set the text color and size
-                      decoration: InputDecoration(
-                        labelText: 'Medication Name',
-                        labelStyle: TextStyle(
-                          color: Colors.grey[400], // Set the label text color
-                          fontSize: 16.0,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color:
+                              Colors.red, // Set the border color when focused
+                          width: 2.0,
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color:
-                                Colors.red, // Set the border color when focused
-                            width: 2.0,
-                          ),
-                          borderRadius:
-                              BorderRadius.circular(10), // Apply border radius
+                        borderRadius:
+                            BorderRadius.circular(10), // Apply border radius
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey[
+                              600]!, // Set the border color when enabled
+                          width: 1.0,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey[
-                                600]!, // Set the border color when enabled
-                            width: 1.0,
-                          ),
-                          borderRadius:
-                              BorderRadius.circular(10), // Apply border radius
-                        ),
+                        borderRadius:
+                            BorderRadius.circular(10), // Apply border radius
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16.0),
-                Card(
-                  elevation: 2,
+              ),
+              const SizedBox(height: 16.0),
+              Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                color: Colors.grey[900],
+                child: ListTile(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  title: const Text(
+                    'Reminder Time',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.white),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        selectedTime == null
+                            ? 'Select time'
+                            : 'Time: ${selectedTime!.format(context)}',
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      const SizedBox(height: 8),
+                      // Text(
+                      //   'Tap to select time',
+                      //   style:
+                      //       TextStyle(fontSize: 14, color: Colors.grey[400]),
+                      // ),
+                    ],
+                  ),
+                  trailing: const Icon(Icons.access_time, color: Colors.green),
+                  onTap: _openTimePicker,
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                color: Colors.grey[900],
+                child: ListTile(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  title: const Text(
+                    'Medication Reminders',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        selectedDate == null
+                            ? 'From'
+                            : 'Date: ${selectedDate.toString().substring(0, 10)}',
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      const SizedBox(height: 8),
+                      // Text(
+                      //   'Tap to select date',
+                      //   style: TextStyle(fontSize: 14, color: Colors.grey),
+                      // ),
+                    ],
+                  ),
+                  trailing: const Icon(Icons.calendar_today, color: Colors.amber),
+                  onTap: _openDatePicker,
+                ),
+              ),
+              ElevatedButton(
+                // Make it span the entire width
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: Colors.grey[900],
-                  child: ListTile(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    title: const Text(
-                      'Reminder Time',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.white),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          selectedTime == null
-                              ? 'Select time'
-                              : 'Time: ${selectedTime!.format(context)}',
-                          style: const TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                        const SizedBox(height: 8),
-                        // Text(
-                        //   'Tap to select time',
-                        //   style:
-                        //       TextStyle(fontSize: 14, color: Colors.grey[400]),
-                        // ),
-                      ],
-                    ),
-                    trailing: const Icon(Icons.access_time, color: Colors.green),
-                    onTap: _openTimePicker,
-                  ),
+                  backgroundColor: Colors.purple[900],
                 ),
-                const SizedBox(height: 16.0),
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  color: Colors.grey[900],
-                  child: ListTile(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    title: const Text(
-                      'Medication Reminders',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          selectedDate == null
-                              ? 'From'
-                              : 'Date: ${selectedDate.toString().substring(0, 10)}',
-                          style: const TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                        const SizedBox(height: 8),
-                        // Text(
-                        //   'Tap to select date',
-                        //   style: TextStyle(fontSize: 14, color: Colors.grey),
-                        // ),
-                      ],
-                    ),
-                    trailing: const Icon(Icons.calendar_today, color: Colors.amber),
-                    onTap: _openDatePicker,
-                  ),
-                ),
-                ElevatedButton(
-                  // Make it span the entire width
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    backgroundColor: Colors.purple[900],
-                  ),
-                  onPressed: _uploadFormData,
-                  child: const Text('Create Reminder'),
-                ),
-                const SizedBox(height: 16.0),
-                SizedBox(
-                  child: ReminderListWidget(),
-                  height: 500,
-                ),
-              ],
-            ),
+                onPressed: _uploadFormData,
+                child: const Text('Create Reminder'),
+              ),
+              const SizedBox(height: 16.0),
+              const SizedBox(
+                height: 500,
+                child: ReminderListWidget(),
+              ),
+            ],
           ),
         ),
       ),

@@ -49,8 +49,8 @@ class _SignOutButtonState extends State<SignOutButton> {
         shadowColor: Color.fromRGBO(36, 36, 36, 1),
         showShimmer: true,
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
+      child: const Padding(
+        padding: EdgeInsets.symmetric(
             horizontal: 20.0, vertical: 10.0), // Adjust padding for size
         child: Center(
           child: Text(

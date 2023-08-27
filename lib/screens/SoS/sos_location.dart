@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SoSPage extends StatelessWidget {
-  SoSPage({Key? key}) : super(key: key);
+  const SoSPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class SoSPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Safety',
-          style: Theme.of(context).textTheme.headline6?.copyWith(
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.white,
               ),
         ),

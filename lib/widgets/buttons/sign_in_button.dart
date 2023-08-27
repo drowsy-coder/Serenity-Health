@@ -6,7 +6,7 @@ class CustomSignInButton extends StatelessWidget {
   final LoginMethods loginMethods = LoginMethods();
   final VoidCallback onPressed;
 
-  CustomSignInButton({required this.onPressed});
+  CustomSignInButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
