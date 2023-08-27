@@ -16,7 +16,7 @@ void main() async {
 
   try {
     authenticated = await auth.authenticate(
-      localizedReason: 'Put Fingerprint',
+      localizedReason: 'Verify Fingerprint to Unlock the App',
       options: const AuthenticationOptions(
         stickyAuth: true,
         biometricOnly: true,
